@@ -4,44 +4,6 @@ from wpimath.kinematics import SwerveDrive4Kinematics
 from wpimath.trajectory import TrapezoidProfile
 from wpimath import units
 
-
-class CoralSubsystemConstants:
-    kElevatorMotorCanId = 4
-    kArmMotorCanId = 3
-    kIntakeMotorCanId = 2
-    
-    class ElevatorSetpoints:
-        kFeederStation = 0
-        kLevel1 = 1
-        kLevel2 = 20
-        kLevel3 = 115
-        kLevel4 = 165
-
-    class ArmSetpoints:
-        kFeederStation = 27
-        kLevel1 = 130
-        kLevel2 = 127
-        kLevel3 = 128
-        kLevel4 = 105
-
-    class IntakeSetpoints:
-        kForward = -0.4
-        kReverse = 0.15
-
-class AlgaeSubsystemConstants:
-    kIntakeMotorCanId = 5
-    kPivotMotorCanId = 6
-
-    class ArmSetpoints:
-        kStow = 0
-        kHold = 12.5
-        kDown = 19.5
-
-    class IntakeSetpoints:
-        kForward = 0.5
-        kReverse = -0.25
-        kHold = 0.3
-
 class DriveConstants:
     # Driving Parameters
     kMaxSpeedMetersPerSecond = 2.7
@@ -127,24 +89,3 @@ class NeoMotorConstants:
 
 class SimulationRobotConstants:
         kPixelsPerMeter = 20
-
-        kElevatorGearing = 25  # 25:1
-        kCarriageMass = 4.3 + 3.15 + 0.151  # Kg
-        kElevatorDrumRadius = 0.0328 / 2.0  # m
-        kMinElevatorHeightMeters = 0.922  # m
-        kMaxElevatorHeightMeters = 1.62  # m
-
-        kArmReduction = 60  # 60:1
-        kArmLength = 0.433  # m
-        kArmMass = 4.3  # Kg
-        kMinAngleRads = units.degreesToRadians(-50.1)  # Radians for minimum arm angle
-        kMaxAngleRads = units.degreesToRadians(40.9 + 180)  # Radians for max arm angle
-
-        kIntakeReduction = 135  # 135:1
-        kIntakeLength = 0.4032262  # m
-        kIntakeMass = 5.8738  # Kg
-        kIntakeMinAngleRads = units.degreesToRadians(80)
-        kIntakeMaxAngleRads = units.degreesToRadians(180)
-        kIntakeShortBarLength = 0.1524  # m
-        kIntakeLongBarLength = 0.3048  # m
-        kIntakeBarAngleRads = units.degreesToRadians(-60)  # Radians for intake bar angle

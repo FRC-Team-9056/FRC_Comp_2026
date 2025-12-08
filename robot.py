@@ -40,8 +40,7 @@ class Robot(wpilib.TimedRobot):
     def autonomousInit(self):
         """This function is called once when autonomous mode starts."""
         self.m_autonomousCommand = AutonomousCommand(
-            self.m_robotContainer.m_robotDrive,
-            self.m_robotContainer.m_coralSubsystem
+            self.m_robotContainer.m_robotDrive
             )
         if hasattr(self.m_autonomousCommand, "get_autonomous_command"):
             self.m_autonomousCommand = self.m_autonomousCommand.get_autonomous_command()
