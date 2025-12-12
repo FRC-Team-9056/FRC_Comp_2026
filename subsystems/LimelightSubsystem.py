@@ -1,24 +1,39 @@
-import wpilib
-from wpimath.controller import PIDController
-from commands2 import Subsystem
-from networktables import NetworkTables
+import ntcore
+from wpimath.geometry import Pose3d, Rotation3d
 
-class LimelightSubsystem(Subsystem):
-    def __init__(self):
-        super().__init__()
-        self.table = NetworkTables.getTable("limelight")
+class LimelightSubsystem:
+    def __init__(self, team_number: int):
+        inst = ntcore.NetworkTableInstance.getDefault()
+        inst.setServerTeam(team_number)
+        inst.startClient4("limelight-client")
 
-    def get_tx(self):
-        """Horizontal offset from crosshair to target (-27 to 27 degrees)"""
-        return self.table.getNumber("tx", 0.0)
+        self.table = inst.getTable("limelight")
 
-    def get_ty(self):
-        """Vertical offset from crosshair to target (-20.5 to 20.5 degrees)"""
-        return self.table.getNumber("ty", 0.0)
+    def has_target(self) -> bool:
+        return self.table.getEntry("tv").getDouble(0) == 1
 
-    def get_tv(self):
-        """Whether the limelight has any valid targets (0 or 1)"""
-        return self.table.getNumber("tv", 0.0)
+    def get_tag_id(self) -> int:
+        return int(self.table.getEntry("tid").getDouble(-1))
 
-    def has_target(self):
-        return self.get_tv() == 1.0
+    def get_robot_pose(self) -> Pose3d | None:
+        arr = self.table.getEntry("botpose").getDoubleArray([])
+
+        if len(arr) < 6:
+            return None
+
+        x, y, z, roll, pitch, yaw = arr
+        return Pose3d(x, y, z, Rotation3d(roll, pitch, yaw))
+
+    def get_distance_to_tag(self) -> float | None:
+        pose = self.get_robot_pose()
+        if pose is None:
+            return None
+
+        # Distance in XY plane only
+        return (pose.X()**2 + pose.Y()**2) ** 0.5
+
+    def get_horizontal_offset(self) -> float:
+        return self.table.getEntry("tx").getDouble(0)
+
+    def get_vertical_offset(self) -> float:
+        return self.table.getEntry("ty").getDouble(0)

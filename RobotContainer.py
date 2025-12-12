@@ -13,9 +13,8 @@ from wpimath.controller import PIDController, HolonomicDriveController, Profiled
 # Our Libaries/functions/constants
 from Constants import OIConstants, AutoConstants, DriveConstants
 from subsystems.DriveSubsystem import DriveSubsystem
+from subsystems.MAXSwerveModule import MAXSwerveModule, DriveToTagCommand
 from subsystems.LimelightSubsystem import LimelightSubsystem
-from subsystems.Apriltags import AutoAlignToTag
-from subsystems.MAXSwerveModule import MAXSwerveModule
 
 
 class RobotContainer:
@@ -26,7 +25,7 @@ class RobotContainer:
     def __init__(self):
         # The robot's subsystems
         self.m_robotDrive = DriveSubsystem()
-        self.m_limelightSubsystem = LimelightSubsystem()
+        self.m_limelight = LimelightSubsystem(9056)
         
 
         self.m_robotDrive.zeroHeading()
@@ -65,10 +64,10 @@ class RobotContainer:
             )
         )
 
-        #Limelight Default#
-        self.m_driverController.leftBumper().whileTrue(
-            AutoAlignToTag(self.m_robotDrive, self.m_limelightSubsystem)
+        self.m_driverController.a().whileTrue(
+            DriveToTagCommand(self.m_robotDrive, self.m_limelight, distance_target_m=1.0)
         )
+
 
     '''
     def getSimulationTotalCurrentDraw(self):
