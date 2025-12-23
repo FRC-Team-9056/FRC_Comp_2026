@@ -80,8 +80,8 @@ class MAXSwerveModule:
 class DriveToTagCommand(commands2.Command):
     def __init__(self, drive, limelight: "LimelightSubsystem", distance_target_m: float = 1.0):
         super().__init__()
-        self.drive = DriveSubsystem.DriveSubsystem
-        self.limelight = LimelightSubsystem.LimelightSubsystem
+        self.drive = drive
+        self.limelight = limelight
         self.distance_target_m = distance_target_m
 
         self.addRequirements(drive)
