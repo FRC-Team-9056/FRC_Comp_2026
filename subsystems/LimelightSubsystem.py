@@ -18,7 +18,7 @@ class LimelightSubsystem:
     def get_robot_pose(self) -> Pose3d | None:
         arr = self.table.getEntry("botpose").getDoubleArray([])
 
-        if len(arr) < 6:
+        if len(arr) < 23:
             return None
 
         x, y, z, roll, pitch, yaw = arr
