@@ -12,8 +12,8 @@ from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.controller import PIDController, HolonomicDriveController, ProfiledPIDControllerRadians
 # Our Libaries/functions/constants
 from Constants import OIConstants, AutoConstants, DriveConstants
-from subsystems.DriveSubsystem import DriveSubsystem
-from subsystems.MAXSwerveModule import MAXSwerveModule, DriveToTagCommand
+from subsystems.DriveSubsystem import DriveSubsystem, DriveToTagCommand
+from subsystems.MAXSwerveModule import MAXSwerveModule
 from subsystems.LimelightSubsystem import LimelightSubsystem
 
 
