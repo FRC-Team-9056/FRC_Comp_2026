@@ -10,8 +10,9 @@ from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModulePosition, SwerveModuleState
 from Configs import Configs
 import commands2
-from subsystems import DriveSubsystem
-from subsystems import LimelightSubsystem
+
+
+
 
 class MAXSwerveModule:
     def __init__(self, driving_can_id, turning_can_id, chassis_angular_offset):
@@ -66,7 +67,7 @@ class MAXSwerveModule:
         corrected_desired_state.optimize(Rotation2d(self.m_turning_encoder.getPosition()))
 
         # Command driving and turning SPARKS towards their respective setpoints.
-        self.m_driving_closed_loop_controller.setReference(corrected_desired_state.speed, SparkLowLevel.ControlType.kPosition)
+        self.m_driving_closed_loop_controller.setReference(corrected_desired_state.speed, SparkLowLevel.ControlType.kVelocity)
         self.m_turning_closed_loop_controller.setReference(corrected_desired_state.angle.radians(), SparkLowLevel.ControlType.kPosition)
 
         self.m_desired_state = corrected_desired_state
