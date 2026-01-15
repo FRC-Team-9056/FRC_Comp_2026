@@ -13,9 +13,6 @@ from subsystems.MAXSwerveModule import MAXSwerveModule
 import Constants
 from wpimath.controller import PIDController, HolonomicDriveController, ProfiledPIDControllerRadians
 import commands2
-from pathplannerlib.auto import AutoBuilder, PathPlannerAuto
-from pathplannerlib.path import PathPlannerPath
-from wpilib import DriverStation
 
 
 class DriveSubsystem(Subsystem):
@@ -51,7 +48,7 @@ class DriveSubsystem(Subsystem):
         # Odometry class for tracking robot pose
         self.m_odometry = SwerveDrive4Odometry(
             DriveConstants.kDriveKinematics,
-            Rotation2d.fromDegrees(self.m_gyro.getAngle()),
+            Rotation2d.fromDegrees(-self.m_gyro.getAngle()),
             [
                 self.m_frontLeft.get_position(),
                 self.m_frontRight.get_position(),
@@ -59,9 +56,6 @@ class DriveSubsystem(Subsystem):
                 self.m_rearRight.get_position()
             ]
         )
-
-    def get_autonomous_command(self):
-        return PathPlannerAuto("MyAuto")
 
     def followTrajectory(self, trajectory):
         theta_controller = ProfiledPIDControllerRadians(
@@ -90,9 +84,9 @@ class DriveSubsystem(Subsystem):
         
 
     def periodic(self):
-        # Update the odometry in the periodic block
+        # Update the odometry 
         self.m_odometry.update(
-            Rotation2d.fromDegrees(self.m_gyro.getAngle()),
+            Rotation2d.fromDegrees(-self.m_gyro.getAngle()),
             [
                 self.m_frontLeft.get_position(),
                 self.m_frontRight.get_position(),
@@ -106,7 +100,7 @@ class DriveSubsystem(Subsystem):
 
     def resetOdometry(self, pose: Pose2d):
         self.m_odometry.resetPosition(
-            Rotation2d.fromDegrees(self.m_gyro.getAngle()),
+            Rotation2d.fromDegrees(-self.m_gyro.getAngle()),
             [
                 self.m_frontLeft.get_position(),
                 self.m_frontRight.get_position(),
@@ -116,8 +110,8 @@ class DriveSubsystem(Subsystem):
             pose
         )
 
-    def drive(self, xSpeed, ySpeed, rot, fieldRelative):
-        # Convert the commanded speeds into the correct units for the drivetrain
+    def drive(self, xSpeed, ySpeed, rot, fieldRelative=True):
+        # Convert the commanded speeds into the correct units 
         xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond
         ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond
         rotDelivered = rot * DriveConstants.kMaxAngularSpeed
@@ -171,7 +165,7 @@ class DriveSubsystem(Subsystem):
         self.m_gyro.zeroYaw()
 
     def getHeading(self):
-        return Rotation2d.fromDegrees(self.m_gyro.getAngle())
+        return Rotation2d.fromDegrees(-self.m_gyro.getAngle())
     
     def getTurnRate(self):
         return self.m_gyro.getRate() * (-1.0 if DriveConstants.kGyroReversed else 1.0)
