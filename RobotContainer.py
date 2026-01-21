@@ -5,7 +5,7 @@
 #
 
 import math
-from commands2 import RunCommand, StartEndCommand, WaitCommand, SequentialCommandGroup, SwerveControllerCommand, Command, InstantCommand
+from commands2 import RunCommand, WaitCommand, SequentialCommandGroup, SwerveControllerCommand
 from commands2.button import CommandXboxController
 from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator, TrapezoidProfileRadians
 from wpimath.geometry import Pose2d, Rotation2d
@@ -13,10 +13,11 @@ from wpimath.controller import PIDController, HolonomicDriveController, Profiled
 # Our Libaries/functions/constants
 from Constants import OIConstants, AutoConstants, DriveConstants
 from subsystems.DriveSubsystem import DriveSubsystem
-from subsystems.MAXSwerveModule import MAXSwerveModule
 from subsystems.LimelightSubsystem import LimelightSubsystem
 from subsystems.DrivetotagSubsystem import DriveToTagCommand
-
+from subsystems.IntakeSubsystem import IntakeSubsystem
+from pathplannerlib.auto import PathPlannerAuto
+from subsystems.MAXSwerveModule import MAXSwerveModule
 
 
 class RobotContainer:
@@ -28,8 +29,8 @@ class RobotContainer:
         # The robot's subsystems
         self.m_robotDrive = DriveSubsystem()
         self.m_limelight = LimelightSubsystem(9056)
+        self.m_intake = IntakeSubsystem(motor_port=0)
         
-
         self.m_robotDrive.zeroHeading()
 
         # The controller port assignments
@@ -52,6 +53,7 @@ class RobotContainer:
             )
         )
 
+
     def applyDeadband(self, value, deadband):
         """Applys a deadband to a joystick input"""
         return value if abs(value) > deadband else 0.0
@@ -70,6 +72,27 @@ class RobotContainer:
             DriveToTagCommand(self.m_robotDrive, self.m_limelight, distance_target_m=1.0)
         )
 
+        self.m_operatorController.leftTrigger(OIConstants.kTriggerButtonThreshold).whileTrue(
+            RunCommand(
+                lambda: self.m_intake.intake(),
+                self.m_intake
+                 )
+        ).onFalse(
+            RunCommand(
+                lambda: self.m_intake.stop()
+            )
+        )
+
+        self.m_operatorController.rightTrigger(OIConstants.kTriggerButtonThreshold).whileTrue(
+            RunCommand( lambda: self.m_intake.eject(),
+                self.m_intake
+            )
+        ).onFalse(
+            RunCommand(
+                lambda: self.m_intake.stop()
+            )
+        )
+
 
     '''
     def getSimulationTotalCurrentDraw(self):
@@ -82,7 +105,11 @@ class AutonomousCommand:
         self.robot_drive = robot_drive
     
     def get_autonomous_command(self):
-        """returns the default autonomous command to run"""
+       
+        
+
+        #below is for safety
+
         config = TrajectoryConfig(
             AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared
@@ -134,7 +161,6 @@ class AutonomousCommand:
             PIDController(AutoConstants.kPYController, 0, 0),  # Y control
             theta_controller  # Theta control (ProfiledPIDController)
         )
-
 
         forward_command = SwerveControllerCommand(
             forward_trajectory,

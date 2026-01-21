@@ -2,7 +2,6 @@ import commands2
 from subsystems.LimelightSubsystem import LimelightSubsystem
 from subsystems.DriveSubsystem import DriveSubsystem
 
-
 class DriveToTagCommand(commands2.Command):
     def __init__(self, drive: DriveSubsystem, limelight: LimelightSubsystem, distance_target_m: float = 1.0):
         super().__init__()

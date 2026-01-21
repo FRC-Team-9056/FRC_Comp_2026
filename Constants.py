@@ -4,6 +4,15 @@ from wpimath.kinematics import SwerveDrive4Kinematics
 from wpimath.trajectory import TrapezoidProfile
 from wpimath import units
 
+
+class IntakeConstants:
+     #intake
+    kIntakeMotorCanId = 5
+
+    class IntakeSetpoints:
+        kForward = -0.3
+        kReverse = 0.15
+
 class DriveConstants:
     # Driving Parameters
     kMaxSpeedMetersPerSecond = 2.7

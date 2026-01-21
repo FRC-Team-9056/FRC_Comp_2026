@@ -9,8 +9,6 @@ import wpilib
 from commands2 import CommandScheduler
 from RobotContainer import RobotContainer, AutonomousCommand
 
-
-
 class Robot(wpilib.TimedRobot):
     """Sets up the robot and its various modes for competition"""
     def __init__(self):

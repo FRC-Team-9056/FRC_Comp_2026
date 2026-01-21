@@ -3,15 +3,11 @@
 # Open Source Software; you can modify and/or share it under the terms of
 # the WPILib BSD license file in the root directory of this project.
 #
-
-
 from rev import SparkMax, SparkLowLevel
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModulePosition, SwerveModuleState
 from Configs import Configs
 import commands2
-
-
 
 
 class MAXSwerveModule:
@@ -37,6 +33,8 @@ class MAXSwerveModule:
         self.m_desired_state.angle = Rotation2d(self.m_turning_encoder.getPosition())
         self.m_driving_encoder.setPosition(0)
 
+        
+    
     def get_state(self):
         """
         Returns the current state of the module.

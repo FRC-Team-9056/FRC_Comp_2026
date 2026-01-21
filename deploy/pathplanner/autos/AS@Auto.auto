@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shooot2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "climb"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "AS@Auto",
+  "choreoAuto": false
+}

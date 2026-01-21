@@ -44,6 +44,17 @@ class Configs:
                 .positionWrappingInputRange(0, turningFactor) \
                 .setFeedbackSensor(Configs.MAXSwerveModule.turningConfig.closedLoop.FeedbackSensor.kAbsoluteEncoder) # this might need to change to Primary encoder for the feedback loop, but I doubt it.closedLoop.positionWrappingInputRange(0, turningFactor)
 
+    class intakeSubsystem:
+        intakeConfig = SparkMaxConfig()
+
+        @staticmethod
+        def initialize():
+        # Configure intake motor
+            Configs.intakeSubsystem.intakeConfig \
+                .inverted(True) \
+                .setIdleMode(idleMode=SparkMaxConfig.IdleMode.kBrake) \
+                .smartCurrentLimit(40)
+    
 # Call initialization functions
 Configs.MAXSwerveModule.initialize()
 
