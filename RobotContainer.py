@@ -17,7 +17,11 @@ from subsystems.LimelightSubsystem import LimelightSubsystem
 from subsystems.DrivetotagSubsystem import DriveToTagCommand
 from subsystems.IntakeSubsystem import IntakeSubsystem
 from pathplannerlib.auto import PathPlannerAuto
-from subsystems.MAXSwerveModule import MAXSwerveModule
+from pathplannerlib.auto import AutoBuilder
+from pathplannerlib.controller import PPHolonomicDriveController
+from pathplannerlib.config import PIDConstants, RobotConfig
+from wpilib import DriverStation
+from wpimath.kinematics import ChassisSpeeds
 
 
 class RobotContainer:
@@ -29,9 +33,39 @@ class RobotContainer:
         # The robot's subsystems
         self.m_robotDrive = DriveSubsystem()
         self.m_limelight = LimelightSubsystem(9056)
-        self.m_intake = IntakeSubsystem(motor_port=0)
+        self.m_intake = IntakeSubsystem()
         
         self.m_robotDrive.zeroHeading()
+
+        # Load robot config from PathPlanner GUI
+        self.robotConfig = RobotConfig.fromGUISettings()
+
+       
+        AutoBuilder.configure(
+
+            self.m_robotDrive.getPose,               # Pose supplier
+            self.m_robotDrive.resetOdometry,          # Odometry reset
+
+        # ChassisSpeeds supplier (current robot speeds)
+            lambda: ChassisSpeeds(0, 0, 0),
+
+        # ChassisSpeeds consumer (drive robot)
+            lambda speeds, ff: self.m_robotDrive.drive(
+                speeds.vx / DriveConstants.kMaxSpeedMetersPerSecond,
+                speeds.vy / DriveConstants.kMaxSpeedMetersPerSecond,
+                speeds.omega / DriveConstants.kMaxAngularSpeed,
+                fieldRelative=False
+            ),
+
+            PPHolonomicDriveController(
+                PIDConstants(5.0, 0.0, 0.0),
+                PIDConstants(5.0, 0.0, 0.0)
+            ),
+
+            self.robotConfig,
+            lambda: DriverStation.getAlliance() == DriverStation.Alliance.kRed,
+            self.m_robotDrive
+        )
 
         # The controller port assignments
         self.m_driverController = CommandXboxController(OIConstants.kDriverControllerPort)
@@ -93,97 +127,12 @@ class RobotContainer:
             )
         )
 
-
+    def getAutonomousCommand(self):
+        return PathPlannerAuto("AS@Auto")
     '''
     def getSimulationTotalCurrentDraw(self):
         # For each subsystem with simulation, returns total current draw
         return self.m_coralSubsystem.get_simulation_current_draw() + self.m_algaeSubsystem.get_simulation_current_draw()
     '''
 
-class AutonomousCommand:
-    def __init__(self, robot_drive: DriveSubsystem):
-        self.robot_drive = robot_drive
     
-    def get_autonomous_command(self):
-       
-        
-
-        #below is for safety
-
-        config = TrajectoryConfig(
-            AutoConstants.kMaxSpeedMetersPerSecond,
-            AutoConstants.kMaxAccelerationMetersPerSecondSquared
-        )
-        config.setKinematics(DriveConstants.kDriveKinematics)
-    
-        #forward trajectory
-        forward_trajectory = TrajectoryGenerator.generateTrajectory(
-            Pose2d(0, 0, Rotation2d(0)),
-            [],
-            Pose2d(1.25, 0, Rotation2d(math.pi)),
-            config
-        )
-
-        self.robot_drive.resetOdometry(forward_trajectory.initialPose())
-
-        # Create a PIDController for turning
-        theta_controller = ProfiledPIDControllerRadians(
-            AutoConstants.kPThetaController, 0, 0,
-            TrapezoidProfileRadians.Constraints(
-                AutoConstants.kMaxAngularSpeedRadiansPerSecond,
-                AutoConstants.kMaxAngularAccelerationRadiansPerSecond
-            )
-        )
-
-        theta_controller.enableContinuousInput(-2 * math.pi, 2 * math.pi)  # Ensure smooth turning
-    
-        back_config = config
-        back_config.setReversed(True)
-        #Backward trajectory
-        backward_trajectory = TrajectoryGenerator.generateTrajectory(
-            Pose2d(0, 0, Rotation2d(0)),  # Start where the previous move ended, but rotated
-            [],
-            Pose2d(-2.2, 0, Rotation2d(0)),  # Move backward another 1 meter
-            back_config
-        )
-    
-
-        theta_controller = ProfiledPIDControllerRadians(
-            AutoConstants.kPThetaController, 0, 0,
-            TrapezoidProfileRadians.Constraints(
-                AutoConstants.kMaxAngularSpeedRadiansPerSecond,
-                AutoConstants.kMaxAngularAccelerationRadiansPerSecond
-            )
-        )
-
-        holonomic_controller = HolonomicDriveController(
-            PIDController(AutoConstants.kPXController, 0, 0),  # X control
-            PIDController(AutoConstants.kPYController, 0, 0),  # Y control
-            theta_controller  # Theta control (ProfiledPIDController)
-        )
-
-        forward_command = SwerveControllerCommand(
-            forward_trajectory,
-            self.robot_drive.getPose,
-            DriveConstants.kDriveKinematics,
-            holonomic_controller,
-            self.robot_drive.setModuleStates,
-            [self.robot_drive]
-        )
-        
-        
-        backward_command = SwerveControllerCommand(
-            backward_trajectory,
-            self.robot_drive.getPose,
-            DriveConstants.kDriveKinematics,
-            holonomic_controller,
-            self.robot_drive.setModuleStates,
-            [self.robot_drive]
-        )
-
-        wait = WaitCommand(5)
-
-        return SequentialCommandGroup(
-            # Drive robot backward
-            backward_command
-        )

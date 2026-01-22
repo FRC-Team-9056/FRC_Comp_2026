@@ -7,15 +7,14 @@ from rev import SparkMax, SparkLowLevel
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModulePosition, SwerveModuleState
 from Configs import Configs
-import commands2
-
 
 class MAXSwerveModule:
     def __init__(self, driving_can_id, turning_can_id, chassis_angular_offset):
 
+        
         self.m_driving_spark = SparkMax(driving_can_id, SparkLowLevel.MotorType.kBrushless)
         self.m_turning_spark = SparkMax(turning_can_id, SparkLowLevel.MotorType.kBrushless)
-
+        
         self.m_driving_encoder = self.m_driving_spark.getEncoder()
         self.m_turning_encoder = self.m_turning_spark.getAbsoluteEncoder()
 

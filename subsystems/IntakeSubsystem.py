@@ -6,7 +6,7 @@ from Configs import Configs
 class IntakeSubsystem(Subsystem):
     """Controls the intake motor for picking up and ejecting balls."""
     
-    def __init__(self, motor_port: int):
+    def __init__(self):
         super().__init__()
         # Create the motor controller 
         self.intake_motor = SparkMax(

@@ -7,7 +7,7 @@
 
 import wpilib
 from commands2 import CommandScheduler
-from RobotContainer import RobotContainer, AutonomousCommand
+from RobotContainer import RobotContainer
 
 class Robot(wpilib.TimedRobot):
     """Sets up the robot and its various modes for competition"""
@@ -38,15 +38,8 @@ class Robot(wpilib.TimedRobot):
         pass
 
     def autonomousInit(self):
-        """This function is called once when autonomous mode starts."""
-        self.m_autonomousCommand = AutonomousCommand(
-            self.m_robotContainer.m_robotDrive
-            )
-        if hasattr(self.m_autonomousCommand, "get_autonomous_command"):
-            self.m_autonomousCommand = self.m_autonomousCommand.get_autonomous_command()
-
-        #Schedule the autonomous command if it exists
-        if self.m_autonomousCommand:
+        self.m_autonomousCommand = self.m_robotContainer.getAutonomousCommand()
+        if  self.m_autonomousCommand:
             self.m_autonomousCommand.schedule()
 
     def autonomousPeriodic(self):
