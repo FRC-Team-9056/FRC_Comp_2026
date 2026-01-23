@@ -54,7 +54,29 @@ class Configs:
                 .inverted(True) \
                 .setIdleMode(idleMode=SparkMaxConfig.IdleMode.kBrake) \
                 .smartCurrentLimit(40)
+            
+    class conveyorSubsystem:
+        conveyorConfig = SparkMaxConfig()
+
+        @staticmethod
+        def initialize():
+        # Configure Conveyor motor
+            Configs.conveyorSubsystem.conveyorConfig \
+                .inverted(True) \
+                .setIdleMode(idleMode=SparkMaxConfig.IdleMode.kBrake) \
+                .smartCurrentLimit(40)
     
+    class launcherSubsystem:
+        launcherConfig = SparkMaxConfig()
+
+        @staticmethod
+        def initialize():
+        # Configure Launcher motor
+            Configs.launcherSubsystem.launcherConfig \
+                .inverted(True) \
+                .setIdleMode(idleMode=SparkMaxConfig.IdleMode.kBrake) \
+                .smartCurrentLimit(40)
+            
 # Call initialization functions
 Configs.MAXSwerveModule.initialize()
 

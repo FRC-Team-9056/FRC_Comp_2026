@@ -3,6 +3,8 @@ from wpimath.geometry import Pose3d, Rotation3d
 from commands2 import Subsystem
 
 class LimelightSubsystem(Subsystem):
+    """Limelight subsystem"""
+    
     def __init__(self, team_number: int):
         inst = ntcore.NetworkTableInstance.getDefault()
         inst.setServerTeam(team_number)

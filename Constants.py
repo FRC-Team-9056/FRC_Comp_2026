@@ -6,12 +6,27 @@ from wpimath import units
 
 
 class IntakeConstants:
-     #intake
+    #intake
     kIntakeMotorCanId = 5
 
     class IntakeSetpoints:
         kForward = -0.3
         kReverse = 0.15
+
+class ConveyorConstants:
+    #conveyor belt
+    kConveyorMotorCanId = 6
+
+    class conveyorSetpoints:
+        kForward = -0.3
+        kReverse = 0.15
+
+class LauncherConstants:
+    #Launcher
+    kLauncherMotorCanId = 7
+        
+    class launcherSetpoints:
+         kLaunch = 0.20
 
 class DriveConstants:
     # Driving Parameters

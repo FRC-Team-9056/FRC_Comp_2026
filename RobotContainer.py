@@ -22,6 +22,8 @@ from pathplannerlib.controller import PPHolonomicDriveController
 from pathplannerlib.config import PIDConstants, RobotConfig
 from wpilib import DriverStation
 from wpimath.kinematics import ChassisSpeeds
+from subsystems.ConveyorSubsystem import ConveyorSubsystem
+from subsystems.LauncherSubsystem import LauncherSubsystem
 
 
 class RobotContainer:
@@ -30,17 +32,19 @@ class RobotContainer:
     autonomous routines, and controller bindings
     """
     def __init__(self):
-        # The robot's subsystems
+        # The robot's subsystems(they are being given a name here)
         self.m_robotDrive = DriveSubsystem()
         self.m_limelight = LimelightSubsystem(9056)
         self.m_intake = IntakeSubsystem()
+        self.m_conveyor = ConveyorSubsystem()
+        self.m_lunch = LauncherSubsystem()
         
         self.m_robotDrive.zeroHeading()
 
         # Load robot config from PathPlanner GUI
         self.robotConfig = RobotConfig.fromGUISettings()
 
-       
+       #AutoBuilder for pathPlanner(important)
         AutoBuilder.configure(
 
             self.m_robotDrive.getPose,               # Pose supplier
@@ -102,13 +106,14 @@ class RobotContainer:
             )
         )
 
+        #Limelight assist
         self.m_driverController.a().whileTrue(
             DriveToTagCommand(self.m_robotDrive, self.m_limelight, distance_target_m=1.0)
         )
 
+        #Balls Intake
         self.m_operatorController.leftTrigger(OIConstants.kTriggerButtonThreshold).whileTrue(
-            RunCommand(
-                lambda: self.m_intake.intake(),
+            RunCommand(lambda: self.m_intake.intake(),
                 self.m_intake
                  )
         ).onFalse(
@@ -117,8 +122,9 @@ class RobotContainer:
             )
         )
 
+        #Balls Outtake from the intake
         self.m_operatorController.rightTrigger(OIConstants.kTriggerButtonThreshold).whileTrue(
-            RunCommand( lambda: self.m_intake.eject(),
+            RunCommand(lambda: self.m_intake.eject(),
                 self.m_intake
             )
         ).onFalse(
@@ -127,6 +133,41 @@ class RobotContainer:
             )
         )
 
+      # Load to Launcher
+        self.m_operatorController.x().whileTrue(
+            RunCommand(lambda: self.m_conveyor.load(), 
+                self.m_conveyor
+            )
+        ).onFalse(
+            RunCommand(
+                lambda: self.m_conveyor.stop()
+            )
+        )
+
+        # load to intake
+        self.m_operatorController.y().whileTrue(
+            RunCommand(lambda: self.m_conveyor.unload(), 
+                self.m_conveyor
+            )
+        ).onFalse(
+            RunCommand(
+                lambda: self.m_conveyor.stop()
+            )
+        )
+
+        #Laucher: shoot
+        self.m_operatorController.a().whileTrue(
+            RunCommand(
+                lambda: self.m_lunch.spinUp(),
+                self.m_lunch
+            )
+        ).onFalse(
+            RunCommand(
+                lambda: self.m_lunch.stop()
+            )
+        )
+
+    #define Autonomous command
     def getAutonomousCommand(self):
         return PathPlannerAuto("AS@Auto")
     '''

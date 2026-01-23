@@ -14,8 +14,6 @@ import Constants
 from wpimath.controller import PIDController, HolonomicDriveController, ProfiledPIDControllerRadians
 import commands2
 
-
-
 class DriveSubsystem(Subsystem):
     def __init__(self):
         # Create MAXSwerveModules

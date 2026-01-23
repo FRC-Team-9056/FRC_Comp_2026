@@ -1,4 +1,4 @@
-from rev import SparkMax, SparkLowLevel,  SparkBase
+from rev import SparkMax, SparkLowLevel, SparkBase
 from commands2 import Subsystem
 import Constants
 from Configs import Configs
@@ -19,13 +19,13 @@ class IntakeSubsystem(Subsystem):
              SparkBase.PersistMode.kPersistParameters)
 
     def intake(self, speed: float = 1.0):
-        """Spin the intake to pick up balls."""
+        """pick up balls."""
         self.intake_motor.set(speed)  
 
     def eject(self, speed: float = 1.0):
-        """Spin the intake in reverse to eject balls."""
+        """eject balls."""
         self.intake_motor.set(-speed)  
 
     def stop(self):
-        """Stop the intake."""
+        """Stop."""
         self.intake_motor.set(0)
