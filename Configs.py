@@ -54,7 +54,59 @@ class Configs:
                 .inverted(True) \
                 .setIdleMode(idleMode=SparkMaxConfig.IdleMode.kBrake) \
                 .smartCurrentLimit(40)
-            
+   
+    class ClimbSubsystem:
+        leftConfig = SparkMaxConfig()
+        rightConfig = SparkMaxConfig()
+
+        @staticmethod
+        def initialize():
+            # Left motor
+            Configs.ClimbSubsystem.leftConfig \
+                .setIdleMode(idleMode=SparkMaxConfig.IdleMode.kBrake) \
+                .smartCurrentLimit(50) \
+                .voltageCompensation(12) \
+                .inverted(False)
+
+            Configs.ClimbSubsystem.leftConfig.closedLoop \
+                .setFeedbackSensor(
+                    Configs.ClimbSubsystem.leftConfig.closedLoop.FeedbackSensor.kPrimaryEncoder
+                ) \
+                .pid(0.2, 0.0, 0.0) \
+                .outputRange(-1, 1)
+
+            # Tune this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Configs.ClimbSubsystem.leftConfig.closedLoop.maxMotion \
+                .maxVelocity(3000) \
+                .maxAcceleration(6000) \
+                .allowedClosedLoopError(0.25)
+
+            Configs.ClimbSubsystem.leftConfig.limitSwitch \
+                .reverseLimitSwitchEnabled(True)
+
+            #Right motor
+            Configs.ClimbSubsystem.rightConfig \
+                .setIdleMode(idleMode=SparkMaxConfig.IdleMode.kBrake) \
+                .smartCurrentLimit(50) \
+                .voltageCompensation(12) \
+                .inverted(True)   # opposite side
+
+            Configs.ClimbSubsystem.rightConfig.closedLoop \
+                .setFeedbackSensor(
+                    Configs.ClimbSubsystem.rightConfig.closedLoop.FeedbackSensor.kPrimaryEncoder
+                ) \
+                .pid(0.2, 0.0, 0.0) \
+                .outputRange(-1, 1)
+
+            #Tune these!!!!!!
+            Configs.ClimbSubsystem.rightConfig.closedLoop.maxMotion \
+                .maxVelocity(3000) \
+                .maxAcceleration(8000) \
+                .allowedClosedLoopError(0.25)
+
+            Configs.ClimbSubsystem.rightConfig.limitSwitch \
+                .reverseLimitSwitchEnabled(True)
+        
     class conveyorSubsystem:
         conveyorConfig = SparkMaxConfig()
 

@@ -13,6 +13,18 @@ class IntakeConstants:
         kForward = -0.3
         kReverse = 0.15
 
+class ClimbSubsystemConstants:
+    #Climb
+    kLeftMotorCanId = 8
+    kRightMotorCanId = 9
+
+    class Setpoints:
+        #(tune these or we shoot the elevator)
+        kStowed = 0.0
+        kLowBar = 1.0
+        kMidBar = 1.0
+        kHighBar = 1.0
+     
 class ConveyorConstants:
     #conveyor belt
     kConveyorMotorCanId = 6
@@ -32,6 +44,7 @@ class DriveConstants:
     # Driving Parameters
     kMaxSpeedMetersPerSecond = 2.7
     kMaxAngularSpeed = 2 * math.pi  # radians per second
+    kMaxAngularAcceleration = math.pi
 
 
     # Chassis configuration

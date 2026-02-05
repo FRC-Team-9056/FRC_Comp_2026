@@ -4,28 +4,42 @@ import Constants
 from Configs import Configs
 
 class IntakeSubsystem(Subsystem):
-    """Controls the intake motor for picking up and ejecting balls."""
     
     def __init__(self):
         super().__init__()
-        # Create the motor controller 
+
         self.intake_motor = SparkMax(
             Constants.IntakeConstants.kIntakeMotorCanId,
             SparkLowLevel.MotorType.kBrushless
-            )
+        )
         self.intake_motor.configure(
             Configs.intakeSubsystem.intakeConfig,
-             SparkBase.ResetMode.kResetSafeParameters,
-             SparkBase.PersistMode.kPersistParameters)
+            SparkBase.ResetMode.kResetSafeParameters,
+            SparkBase.PersistMode.kPersistParameters
+        )
 
+        self.conveyor_motor = SparkMax(
+            Constants.ConveyorConstants.kConveyorMotorCanId,
+            SparkLowLevel.MotorType.kBrushless
+        )
+        self.conveyor_motor.configure(
+            Configs.conveyorSubsystem.conveyorConfig,
+            SparkBase.ResetMode.kResetSafeParameters,
+            SparkBase.PersistMode.kPersistParameters
+        )
+
+   
     def intake(self, speed: float = 1.0):
-        """pick up balls."""
-        self.intake_motor.set(speed)  
+        """Intake + conveyor toward launcher."""
+        self.intake_motor.set(speed)
+        self.conveyor_motor.set(speed)
 
     def eject(self, speed: float = 1.0):
-        """eject balls."""
-        self.intake_motor.set(-speed)  
+        """Eject + conveyor toward intake."""
+        self.intake_motor.set(-speed)
+        self.conveyor_motor.set(-speed)
 
     def stop(self):
-        """Stop."""
+        """Stop"""
         self.intake_motor.set(0)
+        self.conveyor_motor.set(0)

@@ -14,7 +14,7 @@ from wpimath.controller import PIDController, HolonomicDriveController, Profiled
 from Constants import OIConstants, AutoConstants, DriveConstants
 from subsystems.DriveSubsystem import DriveSubsystem
 from subsystems.LimelightSubsystem import LimelightSubsystem
-from subsystems.DrivetotagSubsystem import DriveToTagCommand
+from subsystems.DrivetoPoseCommand import DriveToPoseCommand
 from subsystems.IntakeSubsystem import IntakeSubsystem
 from pathplannerlib.auto import PathPlannerAuto
 from pathplannerlib.auto import AutoBuilder
@@ -22,8 +22,12 @@ from pathplannerlib.controller import PPHolonomicDriveController
 from pathplannerlib.config import PIDConstants, RobotConfig
 from wpilib import DriverStation
 from wpimath.kinematics import ChassisSpeeds
-from subsystems.ConveyorSubsystem import ConveyorSubsystem
 from subsystems.LauncherSubsystem import LauncherSubsystem
+from subsystems.ClimbSubsystem import ClimbSubsystem
+from Constants import ClimbSubsystemConstants
+from pathplannerlib.auto import NamedCommands
+from commands2 import InstantCommand
+
 
 
 class RobotContainer:
@@ -36,13 +40,58 @@ class RobotContainer:
         self.m_robotDrive = DriveSubsystem()
         self.m_limelight = LimelightSubsystem(9056)
         self.m_intake = IntakeSubsystem()
-        self.m_conveyor = ConveyorSubsystem()
         self.m_lunch = LauncherSubsystem()
+        self.m_climb = ClimbSubsystem()
         
         self.m_robotDrive.zeroHeading()
 
         # Load robot config from PathPlanner GUI
         self.robotConfig = RobotConfig.fromGUISettings()
+
+        #path planner name commands configuration
+        
+        NamedCommands.registerCommand(
+            "Shoot",
+            SequentialCommandGroup(
+                InstantCommand(lambda: self.m_lunch.spinUp(), self.m_lunch),
+                WaitCommand(0.5),
+            )
+        )
+
+        NamedCommands.registerCommand(
+            "StopShoot",
+            InstantCommand(self.m_lunch.stop, self.m_lunch)
+        )
+
+        NamedCommands.registerCommand(
+            "IntakeOn",
+            InstantCommand(lambda: self.m_intake.intake(), self.m_intake)
+        )
+
+        NamedCommands.registerCommand(
+            "IntakeOff",
+            InstantCommand(self.m_intake.stop, self.m_intake)
+        )
+
+        NamedCommands.registerCommand(
+            "ClimbOn",
+            InstantCommand(
+                lambda: self.m_climb.set_setpoint_command(
+                    ClimbSubsystemConstants.Setpoints.kLowBar
+                ),
+                self.m_climb
+            )
+        )
+
+        NamedCommands.registerCommand(
+            "ClimbOff",
+            InstantCommand(
+                lambda: self.m_climb.set_setpoint_command(
+                    ClimbSubsystemConstants.Setpoints.kStowed
+                ),
+                self.m_climb
+            )
+        )
 
        #AutoBuilder for pathPlanner(important)
         AutoBuilder.configure(
@@ -107,8 +156,28 @@ class RobotContainer:
         )
 
         #Limelight assist
-        self.m_driverController.a().whileTrue(
-            DriveToTagCommand(self.m_robotDrive, self.m_limelight, distance_target_m=1.0)
+        preset_pose = Pose2d(3.0, 2.0, Rotation2d.fromDegrees(0))
+        self.m_driverController.a().whileTrue( 
+              DriveToPoseCommand(self.m_robotDrive, preset_pose)
+        )
+
+        #Climb
+        self.m_operatorController.leftBumper().onTrue(
+            RunCommand(
+                lambda: self.m_climb.set_setpoint_command(
+                ClimbSubsystemConstants.Setpoints.kStowed
+                ),
+                self.m_climb
+            )
+        )
+        
+        self.m_operatorController.b().onTrue(
+            RunCommand(
+                lambda: self.m_climb.set_setpoint_command(
+                ClimbSubsystemConstants.Setpoints.kLowBar
+                ),
+                self.m_climb
+            )
         )
 
         #Balls Intake
@@ -133,30 +202,8 @@ class RobotContainer:
             )
         )
 
-      # Load to Launcher
-        self.m_operatorController.x().whileTrue(
-            RunCommand(lambda: self.m_conveyor.load(), 
-                self.m_conveyor
-            )
-        ).onFalse(
-            RunCommand(
-                lambda: self.m_conveyor.stop()
-            )
-        )
-
-        # load to intake
-        self.m_operatorController.y().whileTrue(
-            RunCommand(lambda: self.m_conveyor.unload(), 
-                self.m_conveyor
-            )
-        ).onFalse(
-            RunCommand(
-                lambda: self.m_conveyor.stop()
-            )
-        )
-
         #Laucher: shoot
-        self.m_operatorController.a().whileTrue(
+        self.m_operatorController.rightBumper().whileTrue(
             RunCommand(
                 lambda: self.m_lunch.spinUp(),
                 self.m_lunch

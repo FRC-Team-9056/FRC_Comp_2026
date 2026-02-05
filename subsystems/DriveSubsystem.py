@@ -164,7 +164,7 @@ class DriveSubsystem(Subsystem):
         self.m_gyro.zeroYaw()
 
     def getHeading(self):
-        return Rotation2d.fromDegrees(-self.m_gyro.getAngle())
+        return Rotation2d.fromDegrees(self.m_gyro.getAngle())
     
     def getTurnRate(self):
         return self.m_gyro.getRate() * (-1.0 if DriveConstants.kGyroReversed else 1.0)

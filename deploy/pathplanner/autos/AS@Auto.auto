@@ -11,9 +11,45 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOn"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOff"
           }
         },
         {
@@ -23,9 +59,39 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "climb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ClimbOn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ClimbOff"
           }
         }
       ]
