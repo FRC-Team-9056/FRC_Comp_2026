@@ -35,7 +35,9 @@ class ConveyorConstants:
 
 class LauncherConstants:
     #Launcher
-    kLauncherMotorCanId = 7
+    kBottomMotorCanId = 7
+    kTopLeftMotorCanId = 18
+    kTopRightMotorCanId = 19
         
     class launcherSetpoints:
          kLaunch = 0.20

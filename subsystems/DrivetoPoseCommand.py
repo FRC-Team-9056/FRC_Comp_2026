@@ -48,10 +48,10 @@ class DriveToPoseCommand(commands2.Command):
         )
 
     def isFinished(self) -> bool:
-        # Tell the editor that getPose() returns a Pose2d
+        # getPose() returns a Pose2d
         current_pose: Pose2d = self.drive.getPose()
 
-        # Tell the editor the types of translation and rotation
+        # the types of translation and rotation
         current_translation: Translation2d = current_pose.translation
         target_translation: Translation2d = self.target_pose.translation
         pose_error: float = current_translation.distance(target_translation)
@@ -63,5 +63,5 @@ class DriveToPoseCommand(commands2.Command):
         return pose_error < 0.1 and rot_error < 0.05
 
     def end(self, interrupted: bool):
-        # Stop the robot when command ends
+        # Stop the robot 
         self.drive.drive(0.0, 0.0, 0.0, fieldRelative=True)

@@ -3,7 +3,7 @@ from wpimath.geometry import Pose3d, Rotation3d, Pose2d, Rotation2d
 from commands2 import Subsystem
 
 class LimelightSubsystem(Subsystem):
-    """Limelight subsystem with multi-tag support"""
+    """Limelight subsystem"""
     
     def __init__(self, team_number: int):
         super().__init__()
@@ -13,20 +13,19 @@ class LimelightSubsystem(Subsystem):
 
         self.table = inst.getTable("limelight")
 
-    # ----- Target detection -----
+    #Target detection
     def has_target(self) -> bool:
         """Returns True if at least one target is visible"""
         return self.table.getEntry("tv").getDouble(0) == 1
 
     def get_visible_tag_ids(self) -> list[int]:
-        """Returns a list of tag IDs currently visible (up to 2)"""
+        """Returns a list of tag IDs currently visible"""
         ids = self.table.getEntry("tid").getDoubleArray([])
         return [int(tag_id) for tag_id in ids[:2]]  # only max 2 tags
 
     def get_visible_tag_poses(self) -> list[tuple[int, Pose3d]]:
         """
-        Returns a list of tuples (tag_id, Pose3d) for visible tags
-        using fused Limelight pose (botpose_wpiblue)
+        Returns (tag_id, Pose3d) for visible tags
         """
         poses = []
 
@@ -60,8 +59,6 @@ class LimelightSubsystem(Subsystem):
         if not tag_poses:
             return None
 
-        # In get_visible_tag_poses() we already extracted yaw from the array
-        # Just reuse that value
         arr = self.table.getEntry("botpose_wpiblue").getDoubleArray([])
         if len(arr) < 6:
             return None

@@ -37,8 +37,8 @@ class RobotContainer:
     """
     def __init__(self):
         # The robot's subsystems(they are being given a name here)
-        self.m_robotDrive = DriveSubsystem()
         self.m_limelight = LimelightSubsystem(9056)
+        self.m_robotDrive = DriveSubsystem(limelight=self.m_limelight)
         self.m_intake = IntakeSubsystem()
         self.m_lunch = LauncherSubsystem()
         self.m_climb = ClimbSubsystem()
@@ -99,10 +99,10 @@ class RobotContainer:
             self.m_robotDrive.getPose,               # Pose supplier
             self.m_robotDrive.resetOdometry,          # Odometry reset
 
-        # ChassisSpeeds supplier (current robot speeds)
+        # (current robot speeds)
             lambda: ChassisSpeeds(0, 0, 0),
 
-        # ChassisSpeeds consumer (drive robot)
+        # (drive robot)
             lambda speeds, ff: self.m_robotDrive.drive(
                 speeds.vx / DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vy / DriveConstants.kMaxSpeedMetersPerSecond,
@@ -128,7 +128,6 @@ class RobotContainer:
         self.configureButtonBindings()
 
         # Configure default comemands
-        ## Drive default
         self.m_robotDrive.setDefaultCommand(
             RunCommand(
                 lambda: self.m_robotDrive.drive(
