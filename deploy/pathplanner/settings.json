@@ -4,7 +4,10 @@
   "holonomicMode": true,
   "pathFolders": [],
   "autoFolders": [
-    "AS@Auto"
+    "AS@Auto",
+    "AS@Auto2",
+    "AS@Auto3",
+    "AS@Auto4"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

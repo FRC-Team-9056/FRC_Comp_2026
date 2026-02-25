@@ -10,8 +10,8 @@ class IntakeConstants:
     kIntakeMotorCanId = 5
 
     class IntakeSetpoints:
-        kForward = -0.3
-        kReverse = 0.15
+        kForward = -0.75
+        kReverse = 0.6
 
 class ClimbSubsystemConstants:
     #Climb
@@ -19,19 +19,16 @@ class ClimbSubsystemConstants:
     kRightMotorCanId = 9
 
     class Setpoints:
-        #(tune these or we shoot the elevator)
         kStowed = 0.0
-        kLowBar = 1.0
-        kMidBar = 1.0
-        kHighBar = 1.0
+        kLow = 10.0
      
 class ConveyorConstants:
     #conveyor belt
     kConveyorMotorCanId = 6
 
     class conveyorSetpoints:
-        kForward = -0.3
-        kReverse = 0.15
+        kForward = -0.75
+        kReverse = 0.6
 
 class LauncherConstants:
     #Launcher
@@ -40,13 +37,13 @@ class LauncherConstants:
     kTopRightMotorCanId = 19
         
     class launcherSetpoints:
-         kLaunch = 0.20
+         kLaunch = 0.85
 
 class DriveConstants:
     # Driving Parameters
-    kMaxSpeedMetersPerSecond = 2.7
-    kMaxAngularSpeed = 2 * math.pi  # radians per second
-    kMaxAngularAcceleration = math.pi
+    kMaxSpeedMetersPerSecond = 4.0
+    kMaxAngularSpeed = 2.5 * math.pi  # radians per second
+    kMaxAngularAcceleration = 1.5 * math.pi
 
 
     # Chassis configuration
@@ -108,11 +105,10 @@ class OIConstants:
     kTriggerButtonThreshold = 0.2
 
 class AutoConstants:
-    kMaxSpeedMetersPerSecond = 3
-    kMaxAccelerationMetersPerSecondSquared = 3
-    kMaxAngularAccelerationRadiansPerSecond = 3
-    kMaxAngularSpeedRadiansPerSecond = math.pi
-    kMaxAngularSpeedRadiansPerSecondSquared = math.pi
+    kMaxSpeedMetersPerSecond = 4.0
+    kMaxAccelerationMetersPerSecondSquared = 4.0
+    kMaxAngularSpeedRadiansPerSecond = 2 * math.pi
+    kMaxAngularSpeedRadiansPerSecondSquared = 2 * math.pi
 
     kPXController = 1
     kPYController = 1

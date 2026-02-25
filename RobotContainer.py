@@ -20,7 +20,7 @@ from pathplannerlib.auto import PathPlannerAuto
 from pathplannerlib.auto import AutoBuilder
 from pathplannerlib.controller import PPHolonomicDriveController
 from pathplannerlib.config import PIDConstants, RobotConfig
-from wpilib import DriverStation
+from wpilib import DriverStation, SmartDashboard,SendableChooser
 from wpimath.kinematics import ChassisSpeeds
 from subsystems.LauncherSubsystem import LauncherSubsystem
 from subsystems.ClimbSubsystem import ClimbSubsystem
@@ -76,33 +76,25 @@ class RobotContainer:
         NamedCommands.registerCommand(
             "ClimbOn",
             InstantCommand(
-                lambda: self.m_climb.set_setpoint_command(
-                    ClimbSubsystemConstants.Setpoints.kLowBar
-                ),
-                self.m_climb
-            )
+                lambda: self.m_climb.climb(), self.m_climb)
         )
 
         NamedCommands.registerCommand(
             "ClimbOff",
             InstantCommand(
-                lambda: self.m_climb.set_setpoint_command(
-                    ClimbSubsystemConstants.Setpoints.kStowed
-                ),
-                self.m_climb
-            )
+                lambda: self.m_climb.stow(), self.m_climb)
         )
 
-       #AutoBuilder for pathPlanner(important)
+       #AutoBuilder for pathPlanner(important, don't touch -- Alex)
         AutoBuilder.configure(
 
             self.m_robotDrive.getPose,               # Pose supplier
             self.m_robotDrive.resetOdometry,          # Odometry reset
 
-        # (current robot speeds)
+        # current robot speeds
             lambda: ChassisSpeeds(0, 0, 0),
 
-        # (drive robot)
+        # drive robot
             lambda speeds, ff: self.m_robotDrive.drive(
                 speeds.vx / DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vy / DriveConstants.kMaxSpeedMetersPerSecond,
@@ -139,6 +131,17 @@ class RobotContainer:
             )
         )
 
+              # Autonomous chooser
+        self.autoChooser = SendableChooser()
+
+        # Add autos by name 
+        self.autoChooser.setDefaultOption("AS@Auto", PathPlannerAuto("AS@Auto"))
+        self.autoChooser.addOption("AS@Auto2", PathPlannerAuto("AS@Auto2"))
+        
+
+        # Put chooser on dashboard
+        SmartDashboard.putData("Auto Selector", self.autoChooser)
+
 
     def applyDeadband(self, value, deadband):
         """Applys a deadband to a joystick input"""
@@ -156,25 +159,21 @@ class RobotContainer:
 
         #Limelight assist
         preset_pose = Pose2d(3.0, 2.0, Rotation2d.fromDegrees(0))
-        self.m_driverController.a().whileTrue( 
+        self.m_driverController.leftBumper().onTrue( 
               DriveToPoseCommand(self.m_robotDrive, preset_pose)
         )
 
         #Climb
         self.m_operatorController.leftBumper().onTrue(
             RunCommand(
-                lambda: self.m_climb.set_setpoint_command(
-                ClimbSubsystemConstants.Setpoints.kStowed
-                ),
+                lambda: self.m_climb.stow(),
                 self.m_climb
             )
         )
         
-        self.m_operatorController.b().onTrue(
+        self.m_operatorController.x().onTrue(
             RunCommand(
-                lambda: self.m_climb.set_setpoint_command(
-                ClimbSubsystemConstants.Setpoints.kLowBar
-                ),
+                lambda: self.m_climb.climb(),
                 self.m_climb
             )
         )
@@ -202,7 +201,7 @@ class RobotContainer:
         )
 
         #Laucher: shoot
-        self.m_operatorController.rightBumper().whileTrue(
+        self.m_driverController.rightBumper().whileTrue(
             RunCommand(
                 lambda: self.m_lunch.spinUp(),
                 self.m_lunch
@@ -215,7 +214,7 @@ class RobotContainer:
 
     #define Autonomous command
     def getAutonomousCommand(self):
-        return PathPlannerAuto("AS@Auto")
+        return self.autoChooser.getSelected()
     '''
     def getSimulationTotalCurrentDraw(self):
         # For each subsystem with simulation, returns total current draw

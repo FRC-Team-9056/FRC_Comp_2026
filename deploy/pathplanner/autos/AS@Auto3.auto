@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Leftshoot1"
+            "pathName": "middleshootleft"
           }
         },
         {
@@ -103,7 +103,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 1.0
           }
         },
         {
@@ -140,6 +140,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "AS@Auto",
+  "folder": "AS@Auto3",
   "choreoAuto": false
 }
