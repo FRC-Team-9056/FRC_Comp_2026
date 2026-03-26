@@ -23,8 +23,8 @@ from pathplannerlib.config import PIDConstants, RobotConfig
 from wpilib import DriverStation, SmartDashboard,SendableChooser
 from wpimath.kinematics import ChassisSpeeds
 from subsystems.LauncherSubsystem import LauncherSubsystem
-from subsystems.ClimbSubsystem import ClimbSubsystem
-from Constants import ClimbSubsystemConstants
+#from subsystems.ClimbSubsystem import ClimbSubsystem
+#from Constants import ClimbSubsystemConstants
 from pathplannerlib.auto import NamedCommands
 from commands2 import InstantCommand
 
@@ -41,7 +41,7 @@ class RobotContainer:
         self.m_robotDrive = DriveSubsystem(limelight=self.m_limelight)
         self.m_intake = IntakeSubsystem()
         self.m_lunch = LauncherSubsystem()
-        self.m_climb = ClimbSubsystem()
+        #self.m_climb = ClimbSubsystem()
         
         self.m_robotDrive.zeroHeading()
 
@@ -70,20 +70,33 @@ class RobotContainer:
 
         NamedCommands.registerCommand(
             "IntakeOff",
-            InstantCommand(self.m_intake.stop, self.m_intake)
+            InstantCommand(self.m_intake.stopintake, self.m_intake)
         )
 
         NamedCommands.registerCommand(
-            "ClimbOn",
+            "Load",
+            InstantCommand(lambda: self.m_intake.load(), self.m_intake)
+        )
+
+        NamedCommands.registerCommand(
+            "Loadstop",
+            InstantCommand(self.m_intake.stopload, self.m_intake)
+        )
+
+
+        """
+        NamedCommands.registerCommand(
+            #"ClimbOn",
             InstantCommand(
                 lambda: self.m_climb.climb(), self.m_climb)
         )
 
         NamedCommands.registerCommand(
-            "ClimbOff",
+            #"ClimbOff",
             InstantCommand(
                 lambda: self.m_climb.stow(), self.m_climb)
         )
+        """
 
        #AutoBuilder for pathPlanner(important, don't touch -- Alex)
         AutoBuilder.configure(
@@ -137,7 +150,8 @@ class RobotContainer:
         # Add autos by name 
         self.autoChooser.setDefaultOption("AS@Auto", PathPlannerAuto("AS@Auto"))
         self.autoChooser.addOption("AS@Auto2", PathPlannerAuto("AS@Auto2"))
-        
+        self.autoChooser.addOption("AS@Auto3", PathPlannerAuto("AS@Auto3"))
+        self.autoChooser.addOption("AS@Auto4", PathPlannerAuto("AS@Auto4"))
 
         # Put chooser on dashboard
         SmartDashboard.putData("Auto Selector", self.autoChooser)
@@ -163,6 +177,7 @@ class RobotContainer:
               DriveToPoseCommand(self.m_robotDrive, preset_pose)
         )
 
+        """
         #Climb
         self.m_operatorController.leftBumper().onTrue(
             RunCommand(
@@ -177,6 +192,7 @@ class RobotContainer:
                 self.m_climb
             )
         )
+        """
 
         #Balls Intake
         self.m_operatorController.leftTrigger(OIConstants.kTriggerButtonThreshold).whileTrue(
@@ -185,7 +201,8 @@ class RobotContainer:
                  )
         ).onFalse(
             RunCommand(
-                lambda: self.m_intake.stop()
+                lambda: self.m_intake.stopintake(),
+                self.m_intake
             )
         )
 
@@ -196,19 +213,28 @@ class RobotContainer:
             )
         ).onFalse(
             RunCommand(
-                lambda: self.m_intake.stop()
+                lambda: self.m_intake.stopintake()
+            )
+        )
+
+        #Launcher: load
+        self.m_operatorController.rightBumper().whileTrue(
+            RunCommand(
+                lambda: self.m_intake.load(),
+                self.m_intake
+            )
+        ).onFalse(
+            RunCommand(
+                lambda: self.m_intake.stopload(),
+                self.m_intake
             )
         )
 
         #Laucher: shoot
-        self.m_driverController.rightBumper().whileTrue(
+        self.m_operatorController.leftBumper().toggleOnTrue(
             RunCommand(
                 lambda: self.m_lunch.spinUp(),
                 self.m_lunch
-            )
-        ).onFalse(
-            RunCommand(
-                lambda: self.m_lunch.stop()
             )
         )
 

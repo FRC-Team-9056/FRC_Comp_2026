@@ -8,6 +8,18 @@ class IntakeSubsystem(Subsystem):
     def __init__(self):
         super().__init__()
 
+        # Bottom launcher motor
+        self.bottom_motor = SparkMax(
+            Constants.LauncherConstants.kBottomMotorCanId,
+            SparkLowLevel.MotorType.kBrushless
+        )
+        self.bottom_motor.configure(
+            Configs.launcherSubsystem.launcherConfig,
+            SparkBase.ResetMode.kResetSafeParameters,
+            SparkBase.PersistMode.kPersistParameters
+        )
+
+        #intake motor
         self.intake_motor = SparkMax(
             Constants.IntakeConstants.kIntakeMotorCanId,
             SparkLowLevel.MotorType.kBrushless
@@ -18,6 +30,7 @@ class IntakeSubsystem(Subsystem):
             SparkBase.PersistMode.kPersistParameters
         )
 
+        #conveyor motor
         self.conveyor_motor = SparkMax(
             Constants.ConveyorConstants.kConveyorMotorCanId,
             SparkLowLevel.MotorType.kBrushless
@@ -29,17 +42,25 @@ class IntakeSubsystem(Subsystem):
         )
 
    
-    def intake(self, speed: float = 1.0):
-        """Intake + conveyor toward launcher."""
+    def intake(self, speed: float = 0.5):
+        """Intake."""
         self.intake_motor.set(speed)
-        self.conveyor_motor.set(speed)
+        
 
-    def eject(self, speed: float = 1.0):
+    def load(self, speed: float = 1.0):
+        self.conveyor_motor.set(speed)
+        self.bottom_motor.set(speed)
+
+    def eject(self, speed: float = 0.5):
         """Eject + conveyor toward intake."""
         self.intake_motor.set(-speed)
         self.conveyor_motor.set(-speed)
 
-    def stop(self):
+    def stopintake(self):
         """Stop"""
         self.intake_motor.set(0)
+    
+    def stopload(self):
         self.conveyor_motor.set(0)
+        self.bottom_motor.set(0)
+        

@@ -10,25 +10,25 @@ class IntakeConstants:
     kIntakeMotorCanId = 5
 
     class IntakeSetpoints:
-        kForward = -0.75
-        kReverse = 0.6
+        kForward = -0.4
+        kReverse = 0.3
 
-class ClimbSubsystemConstants:
+#class ClimbSubsystemConstants:
     #Climb
-    kLeftMotorCanId = 8
-    kRightMotorCanId = 9
+    #kLeftMotorCanId = 8
+    #kRightMotorCanId = 9
 
-    class Setpoints:
-        kStowed = 0.0
-        kLow = 10.0
+    #class Setpoints:
+        #kStowed = 0.0
+        #kLow = 10.0
      
 class ConveyorConstants:
     #conveyor belt
     kConveyorMotorCanId = 6
 
     class conveyorSetpoints:
-        kForward = -0.75
-        kReverse = 0.6
+        kForward = -0.4
+        kReverse = 0.3
 
 class LauncherConstants:
     #Launcher
@@ -37,7 +37,7 @@ class LauncherConstants:
     kTopRightMotorCanId = 19
         
     class launcherSetpoints:
-         kLaunch = 0.85
+         kLaunch = 0.95
 
 class DriveConstants:
     # Driving Parameters

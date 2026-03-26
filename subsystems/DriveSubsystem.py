@@ -40,7 +40,7 @@ class DriveSubsystem(Subsystem):
         self.m_gyro = navx.AHRS(navx.AHRS.NavXComType.kMXP_SPI)
 
         # Limelight reference
-        self.limelight = LimelightSubsystem
+        self.limelight = limelight # this is instance, but if a bug apears, change this to subsystem instead.
 
         # Pose Estimator
         self.poseEstimator = SwerveDrive4PoseEstimator(
