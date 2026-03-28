@@ -47,14 +47,14 @@ class IntakeSubsystem(Subsystem):
         self.intake_motor.set(speed)
         
 
-    def load(self, speed: float = 1.0):
-        self.conveyor_motor.set(speed)
+    def load(self, speed: float = 0.7):
+        self.conveyor_motor.set(-speed)
         self.bottom_motor.set(speed)
 
     def eject(self, speed: float = 0.5):
         """Eject + conveyor toward intake."""
         self.intake_motor.set(-speed)
-        self.conveyor_motor.set(-speed)
+        self.conveyor_motor.set(speed)
 
     def stopintake(self):
         """Stop"""

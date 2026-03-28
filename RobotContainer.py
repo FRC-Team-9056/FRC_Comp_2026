@@ -5,7 +5,7 @@
 #
 
 import math
-from commands2 import RunCommand, WaitCommand, SequentialCommandGroup, SwerveControllerCommand
+from commands2 import RunCommand, WaitCommand, SequentialCommandGroup, SwerveControllerCommand,StartEndCommand
 from commands2.button import CommandXboxController
 from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator, TrapezoidProfileRadians
 from wpimath.geometry import Pose2d, Rotation2d
@@ -200,7 +200,7 @@ class RobotContainer:
                 self.m_intake
                  )
         ).onFalse(
-            RunCommand(
+            InstantCommand(
                 lambda: self.m_intake.stopintake(),
                 self.m_intake
             )
@@ -212,8 +212,9 @@ class RobotContainer:
                 self.m_intake
             )
         ).onFalse(
-            RunCommand(
-                lambda: self.m_intake.stopintake()
+            InstantCommand(
+                lambda: self.m_intake.stopintake(),
+                self.m_intake
             )
         )
 
@@ -224,7 +225,7 @@ class RobotContainer:
                 self.m_intake
             )
         ).onFalse(
-            RunCommand(
+            InstantCommand(
                 lambda: self.m_intake.stopload(),
                 self.m_intake
             )
@@ -232,8 +233,9 @@ class RobotContainer:
 
         #Laucher: shoot
         self.m_operatorController.leftBumper().toggleOnTrue(
-            RunCommand(
-                lambda: self.m_lunch.spinUp(),
+            StartEndCommand(
+                self.m_lunch.spinUp,   # runs when toggled ON
+                self.m_lunch.stop,     # runs when toggled OFF (or canceled)
                 self.m_lunch
             )
         )
