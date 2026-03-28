@@ -1,4 +1,4 @@
-from rev import SparkMax, SparkLowLevel, SparkBase
+from rev import SparkMax, SparkLowLevel, SparkBase,ResetMode,PersistMode
 from commands2 import Subsystem
 import Constants
 from Configs import Configs
@@ -25,8 +25,8 @@ class LauncherSubsystem(Subsystem):
         for motor in [self.top_left, self.top_right]:
             motor.configure(
                 Configs.launcherSubsystem.launcherConfig,
-                SparkBase.ResetMode.kResetSafeParameters,
-                SparkBase.PersistMode.kPersistParameters
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters
             )
 
         # I think this should be mirroed, because the motors are facing opoosite.

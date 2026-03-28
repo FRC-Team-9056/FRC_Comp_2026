@@ -1,4 +1,4 @@
-from rev import SparkMax, SparkLowLevel, SparkBase
+from rev import SparkMax, SparkLowLevel, SparkFlex,SparkBase, ResetMode, PersistMode
 from commands2 import Subsystem
 import Constants
 from Configs import Configs
@@ -15,30 +15,30 @@ class IntakeSubsystem(Subsystem):
         )
         self.bottom_motor.configure(
             Configs.launcherSubsystem.launcherConfig,
-            SparkBase.ResetMode.kResetSafeParameters,
-            SparkBase.PersistMode.kPersistParameters
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
         )
 
         #intake motor
-        self.intake_motor = SparkMax(
+        self.intake_motor = SparkFlex(
             Constants.IntakeConstants.kIntakeMotorCanId,
             SparkLowLevel.MotorType.kBrushless
         )
         self.intake_motor.configure(
             Configs.intakeSubsystem.intakeConfig,
-            SparkBase.ResetMode.kResetSafeParameters,
-            SparkBase.PersistMode.kPersistParameters
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
         )
 
         #conveyor motor
-        self.conveyor_motor = SparkMax(
+        self.conveyor_motor = SparkFlex(
             Constants.ConveyorConstants.kConveyorMotorCanId,
             SparkLowLevel.MotorType.kBrushless
         )
         self.conveyor_motor.configure(
             Configs.conveyorSubsystem.conveyorConfig,
-            SparkBase.ResetMode.kResetSafeParameters,
-            SparkBase.PersistMode.kPersistParameters
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
         )
 
    
@@ -47,14 +47,18 @@ class IntakeSubsystem(Subsystem):
         self.intake_motor.set(speed)
         
 
-    def load(self, speed: float = 0.7):
+    def load(self, speed: float = 1):
         self.conveyor_motor.set(-speed)
         self.bottom_motor.set(speed)
+
+    def deload(self, speed: float = 1):
+        self.conveyor_motor.set(speed)
+        self.bottom_motor.set(-speed)
 
     def eject(self, speed: float = 0.5):
         """Eject + conveyor toward intake."""
         self.intake_motor.set(-speed)
-        self.conveyor_motor.set(speed)
+
 
     def stopintake(self):
         """Stop"""

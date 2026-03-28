@@ -112,7 +112,7 @@ class RobotContainer:
                 speeds.vx / DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vy / DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.omega / DriveConstants.kMaxAngularSpeed,
-                fieldRelative=False
+                fieldRelative=True
             ),
 
             PPHolonomicDriveController(
@@ -152,6 +152,7 @@ class RobotContainer:
         self.autoChooser.addOption("AS@Auto2", PathPlannerAuto("AS@Auto2"))
         self.autoChooser.addOption("AS@Auto3", PathPlannerAuto("AS@Auto3"))
         self.autoChooser.addOption("AS@Auto4", PathPlannerAuto("AS@Auto4"))
+        self.autoChooser.addOption("AS@Auto5", PathPlannerAuto("AS@Auto5"))
 
         # Put chooser on dashboard
         SmartDashboard.putData("Auto Selector", self.autoChooser)
@@ -222,6 +223,18 @@ class RobotContainer:
         self.m_operatorController.rightBumper().whileTrue(
             RunCommand(
                 lambda: self.m_intake.load(),
+                self.m_intake
+            )
+        ).onFalse(
+            InstantCommand(
+                lambda: self.m_intake.stopload(),
+                self.m_intake
+            )
+        )
+
+        self.m_operatorController.a().whileTrue(
+            RunCommand(
+                lambda: self.m_intake.deload(),
                 self.m_intake
             )
         ).onFalse(

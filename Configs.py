@@ -1,5 +1,5 @@
 import math
-from rev import SparkMaxConfig, SparkFlexConfig 
+from rev import SparkMaxConfig, SparkBase, SparkAbsoluteEncoder, FeedbackSensor
 from Constants import ModuleConstants
 
 class Configs:
@@ -26,7 +26,8 @@ class Configs:
             Configs.MAXSwerveModule.drivingConfig.closedLoop \
                 .pid(0, 0, 0) \
                 .velocityFF(drivingVelocityFeedForward) \
-                .outputRange(-1, 1)
+                .outputRange(-1, 1) \
+                .setFeedbackSensor(FeedbackSensor.kPrimaryEncoder)
 
 
             # Configure turning motor settings
@@ -42,7 +43,7 @@ class Configs:
                 .outputRange(-1, 1) \
                 .positionWrappingEnabled(True) \
                 .positionWrappingInputRange(0, turningFactor) \
-                .setFeedbackSensor(Configs.MAXSwerveModule.turningConfig.closedLoop.FeedbackSensor.kAbsoluteEncoder) # this might need to change to Primary encoder for the feedback loop, but I doubt it.closedLoop.positionWrappingInputRange(0, turningFactor)
+                .setFeedbackSensor(FeedbackSensor.kAbsoluteEncoder) # this might need to change to Primary encoder for the feedback loop, but I doubt it.closedLoop.positionWrappingInputRange(0, turningFactor)
 
     class intakeSubsystem:
         intakeConfig = SparkMaxConfig()
@@ -68,13 +69,6 @@ class Configs:
                 .voltageCompensation(12) \
                 .inverted(False)
 
-            Configs.ClimbSubsystem.leftConfig.closedLoop \
-                .setFeedbackSensor(
-                    Configs.ClimbSubsystem.leftConfig.closedLoop.FeedbackSensor.kPrimaryEncoder
-                ) \
-                .pid(0.2, 0.0, 0.0) \
-                .outputRange(-1, 1)
-
             # Tune this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             Configs.ClimbSubsystem.leftConfig.closedLoop.maxMotion \
                 .maxVelocity(3000) \
@@ -91,12 +85,7 @@ class Configs:
                 .voltageCompensation(12) \
                 .inverted(True)   # opposite side
 
-            Configs.ClimbSubsystem.rightConfig.closedLoop \
-                .setFeedbackSensor(
-                    Configs.ClimbSubsystem.rightConfig.closedLoop.FeedbackSensor.kPrimaryEncoder
-                ) \
-                .pid(0.2, 0.0, 0.0) \
-                .outputRange(-1, 1)
+           #
 
             #Tune these!!!!!!
             Configs.ClimbSubsystem.rightConfig.closedLoop.maxMotion \

@@ -4,7 +4,7 @@
 # the WPILib BSD license file in the root directory of this project.
 #
 
-from rev import SparkMax, SparkLowLevel
+from rev import SparkMax, SparkLowLevel, SparkBase, ResetMode, PersistMode
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModulePosition, SwerveModuleState
 from Configs import Configs
@@ -23,8 +23,8 @@ class MAXSwerveModule:
         self.m_turning_closed_loop_controller = self.m_turning_spark.getClosedLoopController()
 
         # Apply the respective configurations to the SPARKS
-        self.m_driving_spark.configure(Configs.MAXSwerveModule.drivingConfig, SparkMax.ResetMode.kResetSafeParameters, SparkMax.PersistMode.kPersistParameters)
-        self.m_turning_spark.configure(Configs.MAXSwerveModule.turningConfig, SparkMax.ResetMode.kResetSafeParameters, SparkMax.PersistMode.kPersistParameters)
+        self.m_driving_spark.configure(Configs.MAXSwerveModule.drivingConfig, ResetMode.kResetSafeParameters,  PersistMode.kPersistParameters)
+        self.m_turning_spark.configure(Configs.MAXSwerveModule.turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
 
         self.m_chassis_angular_offset = chassis_angular_offset
         self.m_desired_state = SwerveModuleState(0.0, Rotation2d())
