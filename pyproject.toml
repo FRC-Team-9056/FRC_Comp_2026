@@ -30,4 +30,4 @@ components = [
 ]
 
 # Other pip packages to install
-requires = ["robotpy-rev", "robotpy-navx", "robotpy-pathplannerlib", "pynetworktables"]
+requires = ["robotpy-rev", "robotpy-navx", "robotpy-pathplannerlib", "pynetworktables", "robotpy-wpimath"]
