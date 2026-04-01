@@ -69,11 +69,12 @@ class DriveSubsystem(Subsystem):
             ]
         )
 
+        """
         if isinstance(self.limelight, LimelightSubsystem):
             visionPose = self.limelight.get_field_pose()
             if visionPose is not None:
                 self.poseEstimator.addVisionMeasurement(visionPose, wpilib.Timer.getFPGATimestamp())
-
+        """
 
     # Get current estimated pose
     def getPose(self):

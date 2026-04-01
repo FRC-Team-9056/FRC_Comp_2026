@@ -12,12 +12,12 @@ class LauncherSubsystem(Subsystem):
 
         # Top motors
         self.top_left = SparkMax(
-            Constants.LauncherConstants.kTopLeftMotorCanId,
+            Constants.LauncherConstants.kTopleftMotorCanId,
             SparkLowLevel.MotorType.kBrushless
         )
 
         self.top_right = SparkMax(
-            Constants.LauncherConstants.kTopRightMotorCanId,
+            Constants.LauncherConstants.kToprightMotorCanId,
             SparkLowLevel.MotorType.kBrushless
         )
 

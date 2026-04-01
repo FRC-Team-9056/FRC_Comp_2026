@@ -10,40 +10,36 @@ class IntakeConstants:
     kIntakeMotorCanId = 5
 
     class IntakeSetpoints:
-        kForward = -0.4
-        kReverse = 0.3
+        kForward = 0.6
+        kReverse = -0.6
 
-#class ClimbSubsystemConstants:
-    #Climb
-    #kLeftMotorCanId = 8
-    #kRightMotorCanId = 9
-
-    #class Setpoints:
-        #kStowed = 0.0
-        #kLow = 10.0
-     
 class ConveyorConstants:
     #conveyor belt
     kConveyorMotorCanId = 6
 
     class conveyorSetpoints:
-        kForward = -0.4
-        kReverse = 0.3
+        kForward = 0.7
+        kReverse = -0.7
 
 class LauncherConstants:
-    #Launcher
+    #Loader
     kBottomMotorCanId = 7
-    kTopLeftMotorCanId = 18
-    kTopRightMotorCanId = 19
+
+    #Shooter
+    kTopleftMotorCanId = 18
+    kToprightMotorCanId =19
         
-    class launcherSetpoints:
-         kLaunch = 0.95
+    class loaderSetpoints:
+        kload = 0.95
+    
+    class Launchersetpoints:
+        kShootRpm = 5000
+        kVelocityTolerance = 100
 
 class DriveConstants:
     # Driving Parameters
-    kMaxSpeedMetersPerSecond = 4.0
-    kMaxAngularSpeed = 2.5 * math.pi  # radians per second
-    kMaxAngularAcceleration = 1.5 * math.pi
+    kMaxSpeedMetersPerSecond = 4.8
+    kMaxAngularSpeed = 2 * math.pi
 
 
     # Chassis configuration
@@ -101,26 +97,27 @@ class ModuleConstants:
 class OIConstants:
     kDriverControllerPort = 0
     kOperatorControllerPort = 1
-    kDriveDeadband = 0.02
+    kDriveDeadband = 0.1
     kTriggerButtonThreshold = 0.2
 
 class AutoConstants:
-    kMaxSpeedMetersPerSecond = 4.0
-    kMaxAccelerationMetersPerSecondSquared = 4.0
-    kMaxAngularSpeedRadiansPerSecond = 2 * math.pi
-    kMaxAngularSpeedRadiansPerSecondSquared = 2 * math.pi
+    kMaxSpeedMetersPerSecond = 3
+    kMaxAccelerationMetersPerSecondSquared = 3
+    kMaxAngularSpeedRadiansPerSecond = math.pi
+    kMaxAngularSpeedRadiansPerSecondSquared = math.pi
 
     kPXController = 1
     kPYController = 1
     kPThetaController = 1
 
-    # Constraint for the motion profiled robot angle controller
     kThetaControllerConstraints = TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared
+        kMaxAngularSpeedRadiansPerSecond,
+        kMaxAngularSpeedRadiansPerSecondSquared
     )
 
 class NeoMotorConstants:
         kFreeSpeedRpm = 5676
+        kVortexKv = 565
 
 class SimulationRobotConstants:
         kPixelsPerMeter = 20

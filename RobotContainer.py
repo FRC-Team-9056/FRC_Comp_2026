@@ -23,8 +23,6 @@ from pathplannerlib.config import PIDConstants, RobotConfig
 from wpilib import DriverStation, SmartDashboard,SendableChooser
 from wpimath.kinematics import ChassisSpeeds
 from subsystems.LauncherSubsystem import LauncherSubsystem
-#from subsystems.ClimbSubsystem import ClimbSubsystem
-#from Constants import ClimbSubsystemConstants
 from pathplannerlib.auto import NamedCommands
 from commands2 import InstantCommand
 
@@ -83,21 +81,6 @@ class RobotContainer:
             InstantCommand(self.m_intake.stopload, self.m_intake)
         )
 
-
-        """
-        NamedCommands.registerCommand(
-            #"ClimbOn",
-            InstantCommand(
-                lambda: self.m_climb.climb(), self.m_climb)
-        )
-
-        NamedCommands.registerCommand(
-            #"ClimbOff",
-            InstantCommand(
-                lambda: self.m_climb.stow(), self.m_climb)
-        )
-        """
-
        #AutoBuilder for pathPlanner(important, don't touch -- Alex)
         AutoBuilder.configure(
 
@@ -148,11 +131,11 @@ class RobotContainer:
         self.autoChooser = SendableChooser()
 
         # Add autos by name 
-        self.autoChooser.setDefaultOption("AS@Auto", PathPlannerAuto("AS@Auto"))
+        self.autoChooser.setDefaultOption("AS@Auto5", PathPlannerAuto("AS@Auto5"))
         self.autoChooser.addOption("AS@Auto2", PathPlannerAuto("AS@Auto2"))
         self.autoChooser.addOption("AS@Auto3", PathPlannerAuto("AS@Auto3"))
         self.autoChooser.addOption("AS@Auto4", PathPlannerAuto("AS@Auto4"))
-        self.autoChooser.addOption("AS@Auto5", PathPlannerAuto("AS@Auto5"))
+        self.autoChooser.addOption("AS@Auto", PathPlannerAuto("AS@Auto"))
 
         # Put chooser on dashboard
         SmartDashboard.putData("Auto Selector", self.autoChooser)
@@ -171,27 +154,12 @@ class RobotContainer:
                 self.m_robotDrive
             )
         )
-
+        
+        """"
         #Limelight assist
         preset_pose = Pose2d(3.0, 2.0, Rotation2d.fromDegrees(0))
         self.m_driverController.leftBumper().onTrue( 
               DriveToPoseCommand(self.m_robotDrive, preset_pose)
-        )
-
-        """
-        #Climb
-        self.m_operatorController.leftBumper().onTrue(
-            RunCommand(
-                lambda: self.m_climb.stow(),
-                self.m_climb
-            )
-        )
-        
-        self.m_operatorController.x().onTrue(
-            RunCommand(
-                lambda: self.m_climb.climb(),
-                self.m_climb
-            )
         )
         """
 
